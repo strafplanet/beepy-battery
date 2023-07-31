@@ -2,13 +2,13 @@
 simple script to read a corrected battery percentage on the beepy / beepberry
 
 ## Motivation
-While we can measure the voltage of the beepy's battery within the system  
+While we can retrieve a value corresponding to the voltage of the beepy's battery within the system  
 1) the value is unreliable, it has outliers
-2) the voltage is not falling linearly when discharging, so calculating a percentage by using a constant factor gives only limited information about the charge left
+2) the voltage is not falling linearly when discharging, so calculating a _percentage_ by using an offset and a constant factor gives only limited information about the percentage of charge left
 3) reading out the voltage every few seconds in a tmux bar at least made the I2C bus hang after a while
 
 As a solution this script will  
-1) do a first read out to throw away and then a few more to average them
+1) do a first read out of the raw value for voltage to throw away and then a few more to average them
 2) 
 	 a) use multiple correction factors for different levels of voltage/charge  
    b) have a safe cutoff point to 0% so that enough charge is left to safely shut down the system
@@ -16,7 +16,7 @@ As a solution this script will
 
 For 2b) the script will schedule a configurable shutdown of the system when the defined charge level is reached.
 
-The script uses `/sys/firmware/beepberry/battery_raw` if available and fall back to directly read i2c (and temporarily disconnect the keyboard) if not, so it runs on devices with original firmware and with the patched firmware (and module) by excel/aardangelo.
+The script uses `/sys/firmware/beepberry/battery_raw` if available and it falls back to directly reading i2c (and temporarily disconnect the keyboard) if not, so it runs on devices with original firmware and with the patched firmware (and module) by excel/ardangelo.  
 
 The script can write a log to the user's directory.
 
@@ -41,4 +41,4 @@ While the script can be run manually - or it could be scheduled using cron - I g
 ---
 [^1]: Why don't I use proper voltage measurements like 3.7V? Because it makes no sense. We're trusting the charging controller and the battery to cut off charging at the top most level. This is something we have no influence over.    
 We can measure the raw value at which the battery (or the charging controller?) cuts off the battery and while we have _some_ influence on this because we can issue a shutdown command, this does not fully turn off the system.
-Calculating a voltage from the masurement is not reliable and does not give additional information we can act on.
+Calculating a voltage from the masurement is not reliable and does not give additional information the user can act on. The user needs a percentage of charge left or better the time that is left with the charge the system has left.
