@@ -8,15 +8,15 @@ While we can retrieve a value corresponding to the voltage of the beepy's batter
 
 As a solution this script will  
 * [ ] do a first read out of the raw value for voltage to throw away and then a few more to average them
-* [ ] use multiple correction factors for different levels of voltage/charge  
-* [ ] have a safe cutoff point to 0% so that enough charge is left to safely shut down the system
-* [ ] cache the result
+* [x] use (multiple?) correction factors for different levels of voltage/charge  
+* [x] have a safe cutoff point to 0% so that enough charge is left to safely shut down the system
+* [x] cache the result
 * [ ] schedule a configurable shutdown of the system when the defined charge level is reached.
 
-* [ ] The script uses `/sys/firmware/beepberry/battery_raw` if available
+* [x] The script uses `/sys/firmware/beepberry/battery_raw` if available
 * [ ] it falls back to directly reading i2c (and temporarily disconnect the keyboard) if not, so it runs on devices with original firmware and with the patched firmware (and module) by excel/ardangelo.  
 
-* [ ] The script can write a log to the user's directory.
+* [x] The script can write a log to the user's directory.
 
 ## Measurements
 This is the discharge graph of my beepy:
