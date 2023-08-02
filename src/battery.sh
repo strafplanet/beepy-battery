@@ -11,7 +11,6 @@ RAWMIN=1930
 
 #  
 RAWSPAN=$((RAWMAX-RAWMIN))
-echo $RAWSPAN
 
 # if the age of the cache + the allowed age is still greater than now, the cache is still valid
 # (fails if file does not exists so it's created.)
