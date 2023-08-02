@@ -1,4 +1,3 @@
-clone # beepy-battery
 simple script to read a corrected battery percentage on the beepy / beepberry
 
 ## Motivation
@@ -33,6 +32,9 @@ The discharge seems to have three phases if we consider the raw value reported f
 
 Reaching phase 3 will be considered as "battery empty" and a shutdown will be triggered. Since the battery is not really empty, there's enough time to warn the user so they can save their work and shut down the system manually.  
 
+## Charging  
+There is currently no way to query if the beepy is charging, so the percentage is just off by some unknown value while the device is plugged in.
+
 ## Triggering the script
 
 While the script can be run manually - or it could be scheduled using cron - I gather that most people will use tmux anyways, so I suggest to simply use it in the bottom bar of your tmux configuration.
@@ -47,6 +49,7 @@ While the script can be run manually - or it could be scheduled using cron - I g
 
 You should have a result similar to this:  
 
+![](./images/tmux1.png)
 
 ---
 [^1]: Why don't I use proper voltage measurements like 3.7V? Because it makes no sense. We're trusting the charging controller and the battery to cut off charging at the top most level. This is something we have no influence over.    
