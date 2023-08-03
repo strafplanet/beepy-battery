@@ -73,4 +73,5 @@ RAWARRAY: Multiple raw values read from sys to average over
 ---
 [^1]: Why don't I use proper voltage measurements like 3.7V? Because it makes no sense. We're trusting the charging controller and the battery to cut off charging at the top most level. This is something we have no influence over.    
 We can measure the raw value at which the battery (or the charging controller?) cuts off the battery and while we have _some_ influence on this because we can issue a shutdown command, this does not fully turn off the system.
-Calculating a voltage from the masurement is not reliable and does not give additional information the user can act on. The user needs a percentage of charge left or better the time that is left with the charge the system has left.
+Calculating a voltage from the masurement is not reliable and does not give additional information the user can act on. The user needs a percentage of charge left or better the time that is left with the charge the system has left.  
+Of course this script is cheating, too, but cutting off at a specific point before the discharge voltage falls steeply and considering the discharge voltage nearly linear until then seems to be accurate enough for now.
