@@ -18,7 +18,7 @@ if [ $(( $( stat --format=%Y $CACHEFILE ) + $CACHEAGE )) -gt $( date +%s ) ] ;
 then
 #    tail -1 $CACHEFILE | awk '$1'
     OUT=($(tail -1 $CACHEFILE))
-    echo ${OUT[0]}
+    echo ${OUT[2]}
     exit 0
 fi
 # If the script is still running, the cache must have been invalid
@@ -28,7 +28,21 @@ fi
         # Get values from system 
 	PERCENT=$(sudo cat /sys/firmware/beepberry/battery_percent )
 	VOLTAGE=$(sudo cat /sys/firmware/beepberry/battery_volts )
-	RAW=$(sudo cat /sys/firmware/beepberry/battery_raw )
+        RAWARRAY=()
+        # Read multiple values from raw so we can discard the first and average the rest 
+        # Iterate over the array and calc the average in RAW
+        RAWFIRST=$(sudo cat /sys/firmware/beepberry/battery_raw )
+        for i in {1..5}; 
+        do 
+          RAW=$(sudo cat /sys/firmware/beepberry/battery_raw ) 
+          RAWARRAY+=($RAW)
+        done
+        for RAW in ${RAWARRAY[@]}; do
+          RAWSUM=$((RAWSUM+RAW))
+        done
+        RAWLEN=${#RAWARRAY[@]}
+        RAW=$((RAWSUM/RAWLEN))
+
         # Calculate our own percentage
         RAWCALC=$((RAW-RAWMIN))
         PERCENTCALC=$((RAWCALC*100/RAWSPAN))
@@ -40,10 +54,10 @@ fi
           PERCENTCALC=0
         fi
         
-	echo $PERCENTCALC'% '$PERCENT'% '$VOLTAGE'v '$RAWCALC' '$RAW' '$TIME' '
+	echo $TIME' '$PERCENTCALC'% '$PERCENT'% '$VOLTAGE'v '$RAWCALC' '$RAW' '$RAWFIRST' '${RAWARRAY[*]}
 ) >> $CACHEFILE
 
 # tail -1 $CACHEFILE | awk '$1'
 
 OUT=($(tail -1 $CACHEFILE))
-echo ${OUT[0]}
+echo ${OUT[2]}

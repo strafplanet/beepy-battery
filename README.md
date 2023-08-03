@@ -7,7 +7,7 @@ While we can retrieve a value corresponding to the voltage of the beepy's batter
 3) reading out the voltage every few seconds in a tmux bar at least made the I2C bus hang after a while
 
 As a solution this script will  
-* [ ] do a first read out of the raw value for voltage to throw away and then a few more to average them
+* [x] do a first read out of the raw value for voltage to throw away and then a few more to average them
 * [x] use (multiple?) correction factors for different levels of voltage/charge  
 * [x] have a safe cutoff point to 0% so that enough charge is left to safely shut down the system
 * [x] cache the result
@@ -50,6 +50,25 @@ While the script can be run manually - or it could be scheduled using cron - I g
 You should have a result similar to this:  
 
 ![](./images/tmux1.png)
+
+## Logging
+The script writes a logfile to the path given (~/battery.log) and uses this as a cache to return the last value from.  
+For calibration and curiosity purposes the logfile contains way more information than the percentage the script returns:
+
+| TIME  | DATE  | PERCENTCALC | PERCENT | VOLTAGE | RAWCALC  | RAW  | RAWFIRST | RAWARRAY                 |
+| ----- | ----- | ----------- | ------- | ------- | -------- | ---- | -------- | ------------------------ |
+|       |       |             |         |         |          |      |          |                          |
+| 11:47 | 03.08 | 68%         | 73%     | 3.95v   | 354      | 2284 | 2286     | 2281 2285 2283 2286 2285 | 
+
+TIME: Time of the entry  
+DATE: Date of the entry  
+PERCENTCALC: Percentage calculated by the script  
+PERCENT: Percentage returned by sys  
+VOLTAGE: Voltage returned by sys  
+RAWCALC: Raw value calculated by the script (corrected, so that 0 is the lowest expected value, may be negative!)  
+RAW: Raw value averaged by the script  
+RAWFIRST: First raw reading from sys - is thrown away, because I have the vague idea that it is off more often  
+RAWARRAY: Multiple raw values read from sys to average over  
 
 ---
 [^1]: Why don't I use proper voltage measurements like 3.7V? Because it makes no sense. We're trusting the charging controller and the battery to cut off charging at the top most level. This is something we have no influence over.    
